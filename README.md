@@ -8,3 +8,6 @@ Steps : 1.Clone this repo in your virtual env and activite the virutal env befor
 4.Run celery -A Main beat -l info and celery -A Main worker -l INFO to schedule the task if in locallost no need to run it in development 
 i.e heroku as all settings are done for that . 
 5.Enjoy the show !
+
+
+Note : In local host  "celery -A Main beat -l info" and "celery -A Main worker -l INFO" need to be run only once after that function will be called automatically in the background everyday at 6:00 p.m 
