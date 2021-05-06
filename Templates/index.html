@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+
+    <title>Equity</title>
+    <style>
+      html,body{
+        overflow: hidden;
+        padding: 0;
+        margin: 0;
+      }
+      .my-custom-scrollbar {
+        position: relative;
+        height: 200px;
+        overflow: auto;
+        }
+        .table-wrapper-scroll-y {
+        display: block;
+        }
+    </style>
+  </head>
+  <body>
+    <div class="container pt-5">
+      <div class="row justify-content-md-center">
+        <div class="col">
+          <div class="container" style="display: flex;">
+            <!--<div class="fixed"><a class="btn btn-primary" href="#" role="button">export csv</a></div>
+            <div class="flex-item p-2" style="flex-grow: 1;"><input type="search" id="search" class="form-control" placeholder="search by name"
+              aria-label="Search" /></div>-->
+              <div class="col">
+                <a class="p-2 btn btn-primary" href="{% url 'dowload_csv' %}" role="button" download>export csv</a>
+              </div>
+              <div class="col-5 p-2">
+                <input type="search" id="search" class="form-control" placeholder="search by name" aria-label="Search" />
+              </div>
+          </div>
+          <div class="table-wrapper-scroll-y my-custom-scrollbar">
+            <table id="table" class="table table-bordered table-striped mb-0">
+              <thead>
+                <tr>
+                  <th scope="col">SC_NAME</th>
+                  <th scope="col">SC_CODE</th>
+                  <th scope="col">OPEN</th>
+                  <th scope="col">LOW</th>
+                  <th scope="col">HIGH</th>
+                  <th scope="col">CLOSE</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                <td v-for="(value,key) in items" :key="key">
+                  <div v-if="key == 'SC_NAME'">
+                    <ul class="list-unstyled">
+                      <li v-for="data in value" :key="data">
+                          [[data.slice(2,data.length-2)]]
+                      </li>
+                    </ul>
+                  </div>
+                  <div v-if="key == 'SC_CODE'">
+                    <ul class="list-unstyled">
+                      <li v-for="data in value" :key="data">
+                          [[data.slice(1)]]
+                      </li>
+                    </ul>
+                  </div>
+                  <div v-if="key == 'OPEN'">
+                    <ul class="list-unstyled">
+                      <li v-for="data in value" :key="data">
+                          [[data.slice(1)]]
+                      </li>
+                    </ul>
+                  </div>
+                  <div v-if="key == 'LOW'">
+                    <ul class="list-unstyled">
+                      <li v-for="data in value" :key="data">
+                          [[data.slice(1)]]
+                      </li>
+                    </ul>
+                  </div>
+                  <div v-if="key == 'HIGH'">
+                    <ul class="list-unstyled">
+                      <li v-for="data in value" :key="data">
+                          [[data.slice(1)]]
+                      </li>
+                    </ul>
+                  </div>
+                  <div v-if="key == 'CLOSE'">
+                    <ul class="list-unstyled">
+                      <li v-for="data in value" :key="data">
+                          [[data.slice(1)]]
+                      </li>
+                    </ul>
+                  </div>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+        </div>
+      </div>
+    </div>
+    <!-- Optional JavaScript; choose one of the two! -->
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
+
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.min.js" integrity="sha384-j0CNLUeiqtyaRmlzUHCPZ+Gy5fQu0dQ6eZ/xAww941Ai1SxSY+0EQqNXNE6DZiVc" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
+    <script>
+     var app = new Vue({
+        el: '#table',
+        delimiters: ['[[',']]'],
+        data(){
+          return {
+            items:[]
+          }
+        },
+        async created() {
+          var response = await fetch('http://127.0.0.1:8000/equity_request/')
+          this.items = await response.json(); 
+        },        
+      })
+    </script>
+    <script>
+      var $rows = $('#table tr');
+        $('#search').keyup(function() {
+            var val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
+            
+            $rows.show().filter(function() {
+                var text = $(this).text().replace(/\s+/g, ' ').toLowerCase();
+                return !~text.indexOf(val);
+            }).hide();
+        });
+    </script>
+    
+  </body>
+</html>
